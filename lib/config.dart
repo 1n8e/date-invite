@@ -7,7 +7,7 @@ const String herName = 'Аружан';
 
 /// Твой username в Telegram без @. Если пусто — она сама выберет чат,
 /// в который отправить ответ.
-const String telegramUsername = '';
+const String telegramUsername = 'kgggdkip';
 
 /// Дата и время свидания.
 final DateTime dateTime = DateTime(2026, 11, 21, 18, 0);
