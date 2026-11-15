@@ -110,13 +110,14 @@ class _InvitePageState extends State<InvitePage> {
   }
 
   Future<void> _send() async {
-    final text = _answerText;
-    final uri = telegramUsername.isNotEmpty
-        ? Uri.https('t.me', '/$telegramUsername', {'text': text})
-        : Uri.https('t.me', '/share/url', {
-            'url': Uri.base.origin,
-            'text': text,
-          });
+    // Uri.https кодирует пробелы как «+», а Telegram ждёт %20.
+    final text = Uri.encodeComponent(_answerText);
+    final uri = Uri.parse(
+      telegramUsername.isNotEmpty
+          ? 'https://t.me/$telegramUsername?text=$text'
+          : 'https://t.me/share/url'
+                '?url=${Uri.encodeComponent(Uri.base.origin)}&text=$text',
+    );
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
