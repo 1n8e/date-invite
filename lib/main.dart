@@ -75,14 +75,20 @@ class InvitePage extends StatefulWidget {
 class _InvitePageState extends State<InvitePage> {
   int _step = 0;
   final Set<String> _selected = {};
-  String? _after;
   final _ownIdea = TextEditingController();
   final _comment = TextEditingController();
+  final _scroll = ScrollController();
+
+  void _goTo(int step) {
+    setState(() => _step = step);
+    if (_scroll.hasClients) _scroll.jumpTo(0);
+  }
 
   @override
   void dispose() {
     _ownIdea.dispose();
     _comment.dispose();
+    _scroll.dispose();
     super.dispose();
   }
 
@@ -94,13 +100,11 @@ class _InvitePageState extends State<InvitePage> {
         if (_selected.contains(o.id)) o.title,
       if (_ownIdea.text.trim().isNotEmpty) _ownIdea.text.trim(),
     ];
-    final after = afterOptions.where((o) => o.id == _after).firstOrNull;
     final comment = _comment.text.trim();
     return [
       'Я согласна!',
       '${formatDate(dateTime)}, ${formatTime(dateTime)}',
       'Хочу: ${wishes.join(', ')}',
-      if (after != null) 'После: ${after.title}',
       if (comment.isNotEmpty) 'Ещё: $comment',
     ].join('\n');
   }
@@ -138,6 +142,7 @@ class _InvitePageState extends State<InvitePage> {
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
+              controller: _scroll,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 460),
@@ -199,7 +204,7 @@ class _InvitePageState extends State<InvitePage> {
         const SizedBox(height: 16),
         _PrimaryButton(
           label: 'Да, с удовольствием',
-          onPressed: () => setState(() => _step = 1),
+          onPressed: () => _goTo(1),
         ),
         const _RunawayNoButton(),
       ],
@@ -238,33 +243,6 @@ class _InvitePageState extends State<InvitePage> {
           onChanged: (_) => setState(() {}),
         ),
         const SizedBox(height: 28),
-        const Text('А после?', style: _sectionStyle),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            for (final o in afterOptions)
-              ChoiceChip(
-                avatar: Icon(
-                  o.icon,
-                  size: 18,
-                  color: _after == o.id ? _bgTop : _accent,
-                ),
-                label: Text(o.title),
-                labelStyle: TextStyle(
-                  color: _after == o.id ? _bgTop : Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
-                selected: _after == o.id,
-                selectedColor: _accent,
-                backgroundColor: Colors.white.withValues(alpha: 0.07),
-                showCheckmark: false,
-                onSelected: (v) => setState(() => _after = v ? o.id : null),
-              ),
-          ],
-        ),
-        const SizedBox(height: 28),
         _Field(
           controller: _comment,
           hint: 'Пожелания (необязательно)',
@@ -273,7 +251,7 @@ class _InvitePageState extends State<InvitePage> {
         const SizedBox(height: 28),
         _PrimaryButton(
           label: 'Готово',
-          onPressed: _canFinish ? () => setState(() => _step = 2) : null,
+          onPressed: _canFinish ? () => _goTo(2) : null,
         ),
       ],
     );
@@ -303,7 +281,7 @@ class _InvitePageState extends State<InvitePage> {
         const SizedBox(height: 8),
         TextButton(onPressed: _copy, child: const Text('Скопировать ответ')),
         TextButton(
-          onPressed: () => setState(() => _step = 1),
+          onPressed: () => _goTo(1),
           child: const Text('Изменить выбор'),
         ),
       ],
@@ -316,12 +294,6 @@ const _titleStyle = TextStyle(
   fontWeight: FontWeight.w700,
   color: Colors.white,
   height: 1.2,
-);
-
-const _sectionStyle = TextStyle(
-  fontSize: 20,
-  fontWeight: FontWeight.w600,
-  color: Colors.white,
 );
 
 const _bodyStyle = TextStyle(fontSize: 17, color: Colors.white70, height: 1.4);

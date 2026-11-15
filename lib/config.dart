@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Всё, что нужно менять под себя, лежит в этом файле.
 
 /// Её имя. Если оставить пустым — обращение будет без имени.
-const String herName = '';
+const String herName = 'Аружан';
 
 /// Твой username в Telegram без @. Если пусто — она сама выберет чат,
 /// в который отправить ответ.
@@ -43,31 +43,15 @@ const List<DateOption> dateOptions = [
     icon: Icons.gps_fixed,
   ),
   DateOption(
-    id: 'skating',
-    title: 'Коньки',
-    subtitle: 'Каток, огни и держаться за руки',
-    icon: Icons.ice_skating,
-  ),
-];
-
-/// Варианты продолжения вечера.
-const List<DateOption> afterOptions = [
-  DateOption(
-    id: 'dinner',
-    title: 'Ужин',
-    subtitle: 'Уютный ресторан',
-    icon: Icons.restaurant,
+    id: 'archery',
+    title: 'Стрельба из лука',
+    subtitle: 'Почувствуем себя Робин Гудами',
+    icon: Icons.track_changes,
   ),
   DateOption(
-    id: 'coffee',
-    title: 'Кофе и десерт',
-    subtitle: 'Тёплая кофейня',
-    icon: Icons.local_cafe_outlined,
-  ),
-  DateOption(
-    id: 'walk',
-    title: 'Прогулка',
-    subtitle: 'Вечерний город',
-    icon: Icons.nightlight_outlined,
+    id: 'pottery',
+    title: 'Гончарный мастер-класс',
+    subtitle: 'Слепим что-нибудь на память',
+    icon: Icons.emoji_food_beverage_outlined,
   ),
 ];
